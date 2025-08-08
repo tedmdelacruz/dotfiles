@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# Navigate to the project directory
+cd ~/Code/erudifi/genai-service
+
+# Create a new tmux session called 'genai'
+tmux new-session -d -s genai
+
+# Window 1: Docker compose setup with vertical split
+tmux rename-window -t genai:1 'docker'
+tmux split-window -t genai:1 -v
+tmux resize-pane -t genai:1.1 -y  4
+tmux send-keys -t genai:1.1 'docker compose down; docker compose up -d; docker compose logs -f backend worker' Enter
+
+# Window 2: Claude
+tmux new-window -t genai -n 'claude'
+tmux send-keys -t genai:2 'claude' Enter
+
+# Window 3: Kubernetes monitoring with vertical split
+tmux new-window -t genai -n 'k8s'
+tmux split-window -t genai:3 -v
+
+# Window 3 Pane 1: Pod monitoring
+tmux send-keys -t genai:3.1 'export AWS_PROFILE=default' Enter
+tmux send-keys -t genai:3.1 'kubectl config use-context arn:aws:eks:ap-southeast-1:533267219224:cluster/erudifi-private-internal' Enter
+tmux send-keys -t genai:3.1 'watch -n 0.1 kubectl -n genai get pods' Enter
+tmux resize-pane -t genai:3.1 -y  4
+
+# Window 3 Pane 2: Worker logs
+tmux send-keys -t genai:3.2 'kubectl -n genai logs -f deployments/worker-genai-deployment' Enter
+
+# Select Window 1 and attach to session
+tmux select-window -t genai:1
+tmux attach-session -t genai 

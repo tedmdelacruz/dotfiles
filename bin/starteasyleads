@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Navigate to the project directory
+cd ~/Code/personal/easyleads.ph
+
+# Create a new tmux session called 'easyleads'
+tmux new-session -d -s easyleads 
+
+# Window 1: Docker compose setup with vertical split
+tmux rename-window -t easyleads:1 'docker'
+tmux split-window -t easyleads:1 -v
+tmux resize-pane -t easyleads:1.1 -y  4
+tmux send-keys -t easyleads:1.1 'docker compose down; docker compose up -d; docker compose logs -f backend worker' Enter
+
+# Window 2: Claude
+tmux new-window -t easyleads -n 'claude'
+tmux send-keys -t easyleads:2 'claude' Enter
+
+# Select Window 1 and attach to session
+tmux select-window -t easyleads:1
+tmux attach-session -t easyleads 
