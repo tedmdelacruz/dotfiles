@@ -13,8 +13,15 @@ tmux resize-pane -t mono:1.1 -y  4
 tmux send-keys -t mono:1.1 'docker compose down; docker compose up -d; docker compose logs -f backend worker' Enter
 
 # Window 2: Claude
-tmux new-window -t genai -n 'claude'
+tmux new-window -t mono -n 'claude'
 tmux send-keys -t mono:2 'claude' Enter
+
+# Window 3: Frontend with vertical split
+tmux new-window -t mono -n 'frontend'
+tmux send-keys -t mono:3 'cd ~/Code/erudifi/atlas' Enter
+tmux send-keys -t mono:3 'pnpm dev' Enter
+tmux split-window -t mono:3 -v
+tmux send-keys -t mono:3.2 'cd ~/Code/erudifi/atlas' Enter
 
 # Select Window 1 and attach to session
 tmux select-window -t mono:1
