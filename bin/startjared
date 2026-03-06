@@ -31,7 +31,7 @@ tmux send-keys -t jared:3.2 'kubectl -n jared-dev logs -f deployments/worker-jar
 
 # Window 3 Pane 3: Jared deployment logs
 tmux split-window -t jared:3 -v
-tmux send-keys -t jared:3.3 'kubectl -n jared logs -f deployments/jared-deployment' Enter
+tmux send-keys -t jared:3.3 'kubectl -n jared-dev logs -f deployments/jared-deployment' Enter
 
 # Resize log panes to be larger
 tmux resize-pane -t jared:3.2 -y 45%
