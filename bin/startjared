@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# Navigate to the project directory
+cd ~/Code/erudifi/jared
+
+# Create a new tmux session called 'jared'
+tmux new-session -d -s jared 
+
+# Window 1: Docker compose setup with vertical split
+tmux rename-window -t jared:1 'docker'
+tmux split-window -t jared:1 -v
+tmux resize-pane -t jared:1.1 -y  4
+tmux send-keys -t jared:1.1 'docker compose down; docker compose up -d; docker compose logs -f backend worker' Enter
+
+# Window 2: Claude
+tmux new-window -t jared -n 'claude'
+tmux send-keys -t jared:2 'claude' Enter
+
+# Window 3: Kubernetes monitoring with vertical split
+tmux new-window -t jared -n 'k8s'
+tmux split-window -t jared:3 -v
+
+# Window 3 Pane 1: Pod monitoring
+tmux send-keys -t jared:3.1 'export AWS_PROFILE=default' Enter
+tmux send-keys -t jared:3.1 'kubectl config use-context arn:aws:eks:ap-southeast-1:533267219224:cluster/erudifi-private-internal' Enter
+tmux send-keys -t jared:3.1 'watch -n 0.1 kubectl -n jared-dev get pods' Enter
+tmux resize-pane -t jared:3.1 -y  4
+
+# Window 3 Pane 2: Worker logs
+tmux send-keys -t jared:3.2 'kubectl -n jared-dev logs -f deployments/worker-jared-deployment' Enter
+
+# Window 3 Pane 3: Jared deployment logs
+tmux split-window -t jared:3 -v
+tmux send-keys -t jared:3.3 'kubectl -n jared logs -f deployments/jared-deployment' Enter
+
+# Resize log panes to be larger
+tmux resize-pane -t jared:3.2 -y 45%
+tmux resize-pane -t jared:3.3 -y 45%
+
+# Select Window 1 and attach to session
+tmux select-window -t jared:1
+tmux attach-session -t jared 
