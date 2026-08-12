@@ -12,9 +12,9 @@ tmux split-window -t genai:1 -v
 tmux resize-pane -t genai:1.1 -y  4
 tmux send-keys -t genai:1.1 'docker compose down; docker compose up -d; docker compose logs -f backend worker' Enter
 
-# Window 2: Claude
-tmux new-window -t genai -n 'claude'
-tmux send-keys -t genai:2 'claude' Enter
+# Window 2: Open Code
+tmux new-window -t genai -n 'opencode'
+tmux send-keys -t genai:2 'opencode' Enter
 
 # Window 3: Kubernetes monitoring with vertical split
 tmux new-window -t genai -n 'k8s'

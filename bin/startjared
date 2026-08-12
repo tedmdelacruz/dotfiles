@@ -12,9 +12,9 @@ tmux split-window -t jared:1 -v
 tmux resize-pane -t jared:1.1 -y  4
 tmux send-keys -t jared:1.1 'docker compose down; docker compose up -d; docker compose logs -f backend worker' Enter
 
-# Window 2: Claude
-tmux new-window -t jared -n 'claude'
-tmux send-keys -t jared:2 'claude' Enter
+# Window 2: Open Code
+tmux new-window -t jared -n 'opencode'
+tmux send-keys -t jared:2 'opencode' Enter
 
 # Window 3: Kubernetes monitoring with vertical split
 tmux new-window -t jared -n 'k8s'
